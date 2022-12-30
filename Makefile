@@ -1,26 +1,18 @@
-## Makefile for the Linux kernel module
+MAKEFLAGS += --no-print-directory
 
-MODULE := kyrg
-FILES := main.c kallsyms-lookup-name.c periodic-timer.c hash.c access-process-memory.c
+build:
+	make -f Kbuild build
+	make -C test/ build
 
-ifdef KERNELRELEASE
-
-obj-m += $(MODULE).o
-$(MODULE)-m := $(FILES:%.c=%.o)
-
-else
-
-ifndef KDIR
-KDIR := /lib/modules/$(shell uname -r)/build
-endif
-
-build: $(FILE)
-	make -C $(KDIR) M=$(shell pwd) modules
 clean:
-	make -C $(KDIR) M=$(shell pwd) clean
-	rm -f $^
+	make -f Kbuild clean
+	make -C test/ clean
 
-run:
-	insmod $(MODULE).ko
-	rmmod $(MODULE)
-endif
+install:
+	make -f Kbuild install
+
+test:
+	insmod ldim.ko dyndbg="+p"
+	make -C test/ test
+	rmmod ldim.ko
+

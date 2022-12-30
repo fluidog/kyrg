@@ -1,5 +1,10 @@
+*.o
 *.ko
 *.mod*
 *.cmd
 Module.symvers
 modules.order
+/rpmbuild/
+GPATH
+GTAGS
+GRTAGS
